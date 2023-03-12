@@ -1,0 +1,199 @@
+<style>
+  .chatbot {
+  position: fixed;
+   height:500px;
+  width:300px;
+  top:200px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  animation: slide-up 0.5s ease;
+}
+
+.chatbot-header {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  background-color: #f5f5f5;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.chatbot-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.chatbot-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chatbot-name {
+  font-size: 20px;
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+.chatbot-close {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.chatbot-messages {
+  flex-grow: 1;
+  overflow-y: scroll;
+  padding: 10px;
+}
+
+.chatbot-message {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.chatbot-message-received {
+  flex-direction: row-reverse;
+}
+
+.chatbot-message-bubble {
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  max-width: 70%;
+  word-wrap: break-word;
+  animation: slide-in 0.5s ease;
+}
+
+.chatbot-message-sent .chatbot-message-bubble {
+  background-color: #5e5e5e;
+  color: #fff;
+}
+
+.chatbot-input {
+  display: flex;
+  align-items: center;
+  animation: slide-in 0.5s ease;
+}
+
+.chatbot-input input {
+  flex-grow: 1;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 16px;
+}
+
+.chatbot-input button {
+  background-color: #5e5e5e;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  font-size: 16px;
+  cursor: pointer;
+  animation: slide-in 0.5s ease;
+}
+
+@keyframes slide-up {
+  from { bottom: -500px; }
+  to { bottom: 20px; }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+<div class="chatbot">
+  <div class="chatbot-header">
+    <div class="chatbot-avatar">
+      <img src="https://via.placeholder.com/50x50" alt="Chatbot Avatar">
+    </div>
+    <div class="chatbot-name">Chatbot</div>
+    <div class="chatbot-close">X</div>
+  </div>
+  <div class="chatbot-messages">
+    <div class="chatbot-message chatbot-message-received">
+      <div class="chatbot-message-bubble">Hi, how can I help you today?</div>
+    </div>
+    <div class="chatbot-message chatbot-message-sent">
+      <div class="chatbot-message-bubble">I'm having trouble with my account</div>
+    </div>
+    <div class="chatbot-message chatbot-message-received">
+      <div class="chatbot-message-bubble">Sure, what seems to be the issue?</div>
+    </div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" placeholder="Type your message here...">
+    <button>Send</button>
+  </div>
+</div>
+<script>
+ var brain = [  ["hello","hi"],
+  ["hi","hello"],
+  ["what is your name","my name is angela"],
+  ["what is your age","my age is 16"],
+  ["where do you live","i live in heaven"]
+];
+
+var output=document.querySelector(".chatbot-messages");
+var input=document.querySelector(".chatbot-input input");
+
+function send() {
+  var message = input.value.trim();
+  if (message) {
+    var sentMessage = document.createElement("div");
+    sentMessage.classList.add("chatbot-message");
+    sentMessage.classList.add("chatbot-message-sent");
+
+    var sentMessageBubble = document.createElement("div");
+    sentMessageBubble.classList.add("chatbot-message-bubble");
+    sentMessageBubble.textContent = message;
+
+    sentMessage.appendChild(sentMessageBubble);
+    output.appendChild(sentMessage);
+
+    var replyMessage = document.createElement("div");
+    replyMessage.classList.add("chatbot-message");
+    replyMessage.classList.add("chatbot-message-received");
+
+    var replyMessageBubble = document.createElement("div");
+    replyMessageBubble.classList.add("chatbot-message-bubble");
+    replyMessageBubble.textContent = reply(message);
+
+    replyMessage.appendChild(replyMessageBubble);
+    output.appendChild(replyMessage);
+
+    input.value="";
+    output.scrollTop = output.scrollHeight;
+  }
+}
+
+function reply(text) {
+  for(var i=0;i<brain.length;i++) {
+    if(text.toUpperCase().indexOf(brain[i][0].toUpperCase())!==-1) {
+      return brain[i][1];
+    }
+  }
+  return "huh?";
+}
+
+document.querySelector(".chatbot-input button").addEventListener("click", send);
+
+</script>
